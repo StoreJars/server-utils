@@ -1,7 +1,7 @@
 import axios from 'axios';
 import redis from 'redis';
 
-const redisClient = redis.createClient();
+export const redisClient = redis.createClient();
 
 /**
  * This class aims to retun data from one of two sources, 
@@ -9,7 +9,7 @@ const redisClient = redis.createClient();
  */
 
 
-export default class Query {
+export class Query {
   private key;
   private url;
   private token;
