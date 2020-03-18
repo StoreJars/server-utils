@@ -1,0 +1,23 @@
+{
+  "name": "shoppie-server-utils",
+  "version": "1.0.0",
+  "description": "server utils for the shoppie store",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "redis",
+    "mongodb"
+  ],
+  "author": "Victor Akerele",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^13.9.1",
+    "axios": "^0.19.2",
+    "redis": "^3.0.2",
+    "winston": "^3.2.1"
+  }
+}
