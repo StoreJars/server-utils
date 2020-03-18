@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^13.9.1",
+    "@types/redis": "^2.8.16",
     "axios": "^0.19.2",
     "redis": "^3.0.2",
     "typescript": "^3.8.3",

@@ -1,8 +1,6 @@
 import axios from 'axios';
 import redis from 'redis';
 
-export { default as redis } from 'redis';
-
 const redisClient = redis.createClient();
 
 /**
