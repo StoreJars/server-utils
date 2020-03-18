@@ -1,13 +1,15 @@
 import axios from 'axios';
 import redis from 'redis';
 
-const redisClient = redis.createClient();
+export { default as redis } from 'redis';
 
+const redisClient = redis.createClient();
 
 /**
  * This class aims to retun data from one of two sources, 
  * Redis cache or fresh data from server then cache that datat
  */
+
 
 export default class Query {
   private key;
