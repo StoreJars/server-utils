@@ -1,7 +1,7 @@
 {
-  "name": "shoppie-server-utils",
+  "name": "storejars-server-utils",
   "version": "1.0.5",
-  "description": "server utils for the shoppie store",
+  "description": "server utils for storejars ecommerce store",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -21,6 +21,7 @@
     "@types/node": "^13.9.1",
     "@types/redis": "^2.8.16",
     "axios": "^0.19.2",
+    "chalk": "^3.0.0",
     "redis": "^3.0.2",
     "typescript": "^3.8.3",
     "winston": "^3.2.1"
