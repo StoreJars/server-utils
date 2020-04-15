@@ -1,11 +1,12 @@
 {
   "name": "storejars-server-utils",
-  "version": "1.0.6",
+  "version": "1.1.5",
   "description": "server utils for storejars ecommerce store",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "tsc",
+    "dev": "tsc --watch",
     "prepare": "tsc",
     "test": "test"
   },
@@ -18,15 +19,25 @@
   "author": "Victor Akerele",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^13.9.1",
-    "@types/redis": "^2.8.16",
-    "axios": "^0.19.2",
+    "@hapi/joi": "^17.1.1",
+    "@sendgrid/mail": "^6.5.5",
+    "amqplib": "^0.5.5",
     "chalk": "^3.0.0",
+    "cloudinary": "^1.20.0",
+    "datauri": "^2.0.0",
+    "graphql-request": "^1.8.2",
+    "joi-objectid": "^3.0.1",
+    "mongodb": "^3.5.5",
     "redis": "^3.0.2",
-    "typescript": "^3.8.3",
+    "shortid": "^2.2.15",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/winston": "^2.4.4"
+    "@types/mongodb": "^3.5.3",
+    "@types/node": "^13.9.1",
+    "@types/redis": "^2.8.16",
+    "@types/shortid": "^0.0.29",
+    "@types/winston": "^2.4.4",
+    "typescript": "^3.8.3"
   }
 }

@@ -69,6 +69,5 @@ export default function (name: string) {
     db: createLoggerWithLabel(`[${name}:db]`),
     admin: createLoggerWithLabel(`[${name}:admin]`),
     email: createLoggerWithLabel(`[${name}:email]`),
-    createLoggerWithLabel,
   }
 };
