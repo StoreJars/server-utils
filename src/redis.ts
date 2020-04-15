@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { GraphQLClient } from 'graphql-request';
 import redis from 'redis';
 
 export function redisConnect(url: string) {
@@ -11,15 +11,13 @@ export function redisConnect(url: string) {
  */
 
 export class Query {
-  private key;
-  private url;
-  private token;
+  private url: string;
+  private key: string;
   private redisClient;
 
-  constructor(redisClient, key, url, token = '') {
-    this.key = key;
+  constructor(redisClient, key, url) {
     this.url = url;
-    this.token = token;
+    this.key = key;
     this.redisClient = redisClient
   }
 
@@ -33,53 +31,42 @@ export class Query {
 
   private async getLocal() {
     return new Promise((resolve, reject) => {
-      this.redisClient.get(this.key, (error, result) => {
-        if (error) {
-          reject(error);
-        }
+      if (this.redisClient.connected) {
 
-        if (result) {
-          resolve(result);
-        } else {
-          resolve('');
-        }
-      });
+        this.redisClient.get(this.key, (error, result) => {
+          if (error) {
+            reject(error);
+          }
+
+          if (result) {
+            resolve(result);
+          } else {
+            resolve('');
+          }
+        });
+
+      } else {
+        resolve('');
+      }
     })
   }
 
-  private async getLive() {
-    try {
-      const config = {
-        headers: { Authorization: `Bearer ${this.token}` }
-      };
+  private getLive(query, variables): Promise<{}> {
+    const client = new GraphQLClient(this.url)
 
-      const response = await axios.get(this.url, config);
-
-      const { data } = response.data;
-
-      this.set(data);
-
-      return data;
-    } catch (ex) {
-      throw ex;
-    }
+    return client.request(query, variables)
   }
 
-  public async  get() {
-    try {
+  public async  get(query, variables) {
+    // TDODO fix issue where redis is returning earler an undefuned therby crashing the app
+    this.flush();
 
-      // TDODO fix issue where redis is returning earler an undefuned therby crashing the app
-      this.flush();
+    const res = await this.getLocal();
 
-      const res = await this.getLocal();
-
-      if (res) {
-        return res;
-      } else {
-        return await this.getLive();
-      }
-    } catch (ex) {
-      throw ex
+    if (res) {
+      return res;
+    } else {
+      return this.getLive(query, variables);
     }
   }
 }
