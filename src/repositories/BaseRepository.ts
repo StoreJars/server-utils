@@ -59,33 +59,6 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     return res;
   }
 
-  public async findOneByIdAndStoreId(id: ObjectID, storeId: ObjectID, message?: string, filter?: object): Promise<T> {
-
-    const newId = objectId(id);
-    const newStoreId = objectId(storeId);
-
-    const res = await this.collection.findOne({ '_id': newId, 'storeId': newStoreId, 'meta.active': true }, filter);
-
-    if (!res) {
-      throw new NotFoundError(message || 'not found');
-    }
-
-    return res;
-  }
-
-  public async findOneByShortIdAndStoreId(shortId: string, storeId: ObjectID, message?: string, filter?: object): Promise<T> {
-
-    const newStoreId = objectId(storeId);
-
-    const res = await this.collection.findOne({ shortId, 'storeId': newStoreId, 'meta.active': true }, filter);
-
-    if (!res) {
-      throw new NotFoundError(message || 'not found');
-    }
-
-    return res;
-  }
-
   public async aggregate(query): Promise<any> {
     // find a way to attach meta.active === true to only return items that are active
     return this.collection.aggregate(query).toArray();

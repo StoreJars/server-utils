@@ -28,5 +28,4 @@ export async function receiveMessage() {
   }
 }
 
-
 // Store woud take dtat from the queeu and perisis it in a db
