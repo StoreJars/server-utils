@@ -1,6 +1,6 @@
 {
   "name": "storejars-server-utils",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "server utils for storejars ecommerce store",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
