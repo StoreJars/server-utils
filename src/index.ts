@@ -6,5 +6,5 @@ export { default as Cloudinary } from './cloudinary';
 
 export { Query, redisConnect } from './redis';
 export {
-  getPublicUrl, objectId, ObjectIdValidator, timestamp, validateUrl, generateId
+  getPublicUrl, objectId, timestamp, validateUrl, generateId
 } from './utils';
