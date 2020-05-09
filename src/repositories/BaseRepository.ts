@@ -64,17 +64,43 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     return this.collection.aggregate(query).toArray();
   }
 
-  public async update(id: ObjectID, query: object): Promise<any> {
+  public async update(id: ObjectID, data: object): Promise<any> {
 
     const convertedId = objectId(id);
 
+    // if item isnt found, this should throw an error and stop here
+    const res = await this.findOneById(convertedId);
+
+    // ensure meta and _id are never updated
+    // @ts-ignore
+    delete data.meta;
+    // @ts-ignore
+    delete data._id;
+
+    let query = {};
+
+    // only select items whos values have changed
+    Object.keys(data).forEach(item => {
+      if (data[item] !== res[item]) {
+        query = {
+          ...query, ...{ [item]: data[item] }
+        }
+      }
+    });
+
     const updateResult = await this.collection.findOneAndUpdate(
       { _id: convertedId },
-      query,
+      {
+        $set: {
+          ...query,
+          'meta.updatedAt': new Date(),
+        }
+      },
       {
         returnOriginal: false,
       }
     );
+
     // find a way to know when the doc was updated
     // if theres no value, the item wasnt modified so we throw and error to indicate an unsuccessful action
     if (!updateResult.value) {

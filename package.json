@@ -30,7 +30,6 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/mongodb": "^3.5.8",
     "@types/node": "^13.9.1",
     "@types/redis": "^2.8.16",
     "@types/shortid": "^0.0.29",
