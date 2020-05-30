@@ -1,6 +1,4 @@
-import { ObjectID } from 'mongodb';
-import Joi from '@hapi/joi';
-import joiobjectid from 'joi-objectid';
+import objectid from 'objectid';
 import shortId from 'shortid';
 
 export function timestamp() {
@@ -29,7 +27,7 @@ export function getPublicUrl(type, filename) {
  */
 export function objectId(id: any) {
   try {
-    return new ObjectID(id);
+    return new objectid(id);
   } catch (ex) {
     throw new Error('invalid id');
   }
@@ -39,4 +37,3 @@ export function generateId() {
   shortId.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&$');
   return shortId.generate();
 }
-export const ObjectIdValidator = joiobjectid(Joi);

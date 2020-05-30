@@ -1,15 +1,32 @@
+
 import Datauri from 'datauri';
 const cloudinary = require('cloudinary').v2;
 
 export default class Cloudinary {
-  private config: string;
-
   constructor(config) {
-    this.config = config;
-    cloudinary.config(this.config);
+    cloudinary.config(config);
   }
 
-  public async  uploadImage(file, folderName: string, tags: string) {
+  public async  uploadImageStream(file, folderName: string, tags: string): Promise<any> {
+    const date = Date.now();
+
+    // TODO this events location should be dynamic
+    const publicId = `images/${folderName}/${date + file.filename.split('.').reverse().pop()}`;
+
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream({ tags, public_id: publicId }, (err, image) => {
+
+        if (err) {
+          reject(err);
+        }
+        resolve(image)
+      })
+
+      file.createReadStream().pipe(uploadStream);
+    })
+  }
+
+  public async uploadImage(file, folderName: string, tags: string): Promise<any> {
     const dataUri = new Datauri();
     const date = Date.now();
 
@@ -21,5 +38,10 @@ export default class Cloudinary {
     dataUri.format('.' + res, file.buffer);
 
     return cloudinary.uploader.upload(dataUri.content, { tags, public_id: publicId });
+  }
+
+  public async deleteImage(imageUrl) {
+    // validate image url here
+    return cloudinary.uploader.destroy(imageUrl);
   }
 }
