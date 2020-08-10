@@ -20,15 +20,6 @@ function logFormat(loggerLabel) {
     myFormat,
   );
 }
-const debugFileTransport = new transports.File({
-  filename: path.join(LOGS_DIR, 'debug.log'),
-  level: 'info',
-});
-
-const errorFileTransport = new transports.File({
-  filename: path.join(LOGS_DIR, 'error.log'),
-  level: 'error',
-});
 
 function createLoggerWithLabel(labelName: string) {
   return createLogger({
@@ -41,26 +32,34 @@ function createLoggerWithLabel(labelName: string) {
         handleExceptions: true,
         // humanReadableUnhandledException: true,
       }),
-      debugFileTransport,
-      errorFileTransport,
     ],
     format: logFormat(labelName),
   });
 }
 
 export default function (name: string) {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV == 'production') {
+    createLoggerWithLabel(name).add(loggingWinston);
+  } else {
     createLoggerWithLabel(name).add(
       new transports.Console({
         format: combine(colorize(), label({ label: name }), timestamp({ format: 'YYYY-MM-DD HH:mm:ss' })),
       }),
     );
-  }
 
-  if (process.env.NODE_ENV == 'production') {
-    createLoggerWithLabel(name).remove(debugFileTransport);
-    createLoggerWithLabel(name).remove(errorFileTransport);
-    createLoggerWithLabel(name).add(loggingWinston);
+    createLoggerWithLabel(name).add(
+      new transports.File({
+        filename: path.join(LOGS_DIR, 'debug.log'),
+        level: 'info',
+      }),
+    );
+
+    createLoggerWithLabel(name).add(
+      new transports.File({
+        filename: path.join(LOGS_DIR, 'error.log'),
+        level: 'error',
+      }),
+    );
   }
 
   return {
