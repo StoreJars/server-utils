@@ -1,4 +1,3 @@
-
 import sgMail from '@sendgrid/mail';
 
 export default class Mailer {
@@ -12,8 +11,7 @@ export default class Mailer {
     sgMail.setApiKey(this.key);
   }
 
-  public async  sendMail(to: string, subject: string, message: string) {
-
+  public async sendMail(to: string, subject: string, message: string) {
     const msg = {
       to,
       from: this.sender,

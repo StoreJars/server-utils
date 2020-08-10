@@ -5,7 +5,6 @@ import { NotFoundError } from '../errors';
 import { IRead, IWrite, IMeta } from '../interfaces';
 
 export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
-
   public readonly collection: Collection;
 
   constructor(db: Db, collectionName: string) {
@@ -29,28 +28,24 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   }
 
   public async createMany(items: T[]): Promise<T> {
-
     const result = await this.collection.insertMany(items);
 
     return result.ops[0];
   }
 
   public async find(query?: object, filter?: object): Promise<T[]> {
-
     // this should only return things that have been deleted
     return this.collection.find({ ...query, 'meta.active': true }, filter).toArray();
   }
 
   public async findOne(query?: object, filter?: object): Promise<T> {
-
     return this.collection.findOne({ ...query, 'meta.active': true }, filter);
   }
 
   public async findOneById(id: ObjectID, message?: string, filter?: object): Promise<T> {
-
     const newId = objectId(id);
 
-    const res = await this.collection.findOne({ '_id': newId, 'meta.active': true }, filter);
+    const res = await this.collection.findOne({ _id: newId, 'meta.active': true }, filter);
 
     if (!res) {
       throw new NotFoundError(message || 'not found');
@@ -65,7 +60,6 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   }
 
   public async update(id: ObjectID, data: object): Promise<any> {
-
     const convertedId = objectId(id);
 
     // if item isnt found, this should throw an error and stop here
@@ -80,11 +74,12 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     let query = {};
 
     // only select items whos values have changed
-    Object.keys(data).forEach(item => {
+    Object.keys(data).forEach((item) => {
       if (data[item] !== res[item]) {
         query = {
-          ...query, ...{ [item]: data[item] }
-        }
+          ...query,
+          ...{ [item]: data[item] },
+        };
       }
     });
 
@@ -94,11 +89,11 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
         $set: {
           ...query,
           'meta.updatedAt': new Date(),
-        }
+        },
       },
       {
         returnOriginal: false,
-      }
+      },
     );
 
     // find a way to know when the doc was updated
@@ -111,7 +106,6 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   }
 
   public async deactivate(id: ObjectID): Promise<any> {
-
     const convertedId = objectId(id);
 
     const updateResult = await this.collection.findOneAndUpdate(

@@ -1,12 +1,10 @@
-
 import { UnauthorizedError } from '../errors';
 
 /**
-* Check if the user is a vendor by getting his type 
-*/
+ * Check if the user is a vendor by getting his type
+ */
 
 export function Customer(req, res, next: any) {
-
   const { user } = req;
   // valudate that a user is available on the request
 
@@ -31,7 +29,7 @@ export function Admin(req, res, next: any) {
   const { user } = req;
 
   if (user.type === 'admin') {
-    next()
+    next();
   } else {
     throw new UnauthorizedError('not permitted');
   }
