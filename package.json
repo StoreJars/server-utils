@@ -1,6 +1,6 @@
 {
   "name": "storejars-node-toolkit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "server utils for storejars ecommerce store, powered by NodeJS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
