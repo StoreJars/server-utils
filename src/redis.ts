@@ -6,8 +6,8 @@ export function redisConnect(url: string) {
 }
 
 /**
- * This class aims to retun data from one of two sources,
- * Redis cache or fresh data from server then cache that datat
+ * This class aims to return data from one of two sources,
+ * Redis cache or fresh data from server then cache that data
  */
 
 export class Query {
@@ -56,7 +56,7 @@ export class Query {
   }
 
   public async get(query, variables) {
-    // TDODO fix issue where redis is returning earler an undefuned therby crashing the app
+    // TODO fix issue where redis is returning earlier an undefined thereby crashing the app
     this.flush();
 
     const res = await this.getLocal();
