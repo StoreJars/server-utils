@@ -1,9 +1,11 @@
 import { Collection, Db, ObjectID } from 'mongodb';
+import { injectable } from 'inversify';
 
 import { objectId } from '../utils';
 import { NotFoundError } from '../errors';
 import { IRead, IWrite, IMeta } from '../interfaces';
 
+@injectable()
 export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   public readonly collection: Collection;
 
@@ -33,16 +35,16 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     return result.ops[0];
   }
 
-  public async find(query?: object, filter?: object): Promise<T[]> {
+  public async find(query?: Record<string, unknown>, filter?: Record<string, unknown>): Promise<T[]> {
     // this should only return things that have been deleted
     return this.collection.find({ ...query, 'meta.active': true }, filter).toArray();
   }
 
-  public async findOne(query?: object, filter?: object): Promise<T> {
+  public async findOne(query?: Record<string, unknown>, filter?: Record<string, unknown>): Promise<T> {
     return this.collection.findOne({ ...query, 'meta.active': true }, filter);
   }
 
-  public async findOneById(id: ObjectID, message?: string, filter?: object): Promise<T> {
+  public async findOneById(id: ObjectID, message?: string, filter?: Record<string, unknown>): Promise<T> {
     const newId = objectId(id);
 
     const res = await this.collection.findOne({ _id: newId, 'meta.active': true }, filter);
@@ -59,16 +61,14 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     return this.collection.aggregate(query).toArray();
   }
 
-  public async update(id: ObjectID, data: object): Promise<any> {
+  public async update(id: ObjectID, data: Record<string, unknown>): Promise<any> {
     const convertedId = objectId(id);
 
     // if item isnt found, this should throw an error and stop here
     const res = await this.findOneById(convertedId);
 
     // ensure meta and _id are never updated
-    // @ts-ignore
     delete data.meta;
-    // @ts-ignore
     delete data._id;
 
     let query = {};

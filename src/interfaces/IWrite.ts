@@ -1,6 +1,6 @@
 export default interface IWrite<T> {
   create(item: T): Promise<T>;
   createMany(item: T[]): Promise<T>;
-  deactivate(item: object): Promise<object>;
-  update(documentId: object, data: object): Promise<object>;
+  deactivate(item: Record<string, unknown>): Promise<unknown>;
+  update(documentId: Record<string, unknown>, data: Record<string, unknown>): Promise<unknown>;
 }
