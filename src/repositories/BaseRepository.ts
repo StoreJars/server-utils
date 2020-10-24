@@ -1,11 +1,9 @@
 import { Collection, Db, ObjectID } from 'mongodb';
-import { injectable } from 'inversify';
 
 import { objectId } from '../utils';
 import { NotFoundError } from '../errors';
 import { IRead, IWrite, IMeta } from '../interfaces';
 
-@injectable()
 export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   public readonly collection: Collection;
 
