@@ -2,7 +2,7 @@ import sgMail from '@sendgrid/mail';
 
 export default class Mailer {
   private key: string;
-  private sender: string;
+  private sender: { email: string; name: string };
 
   constructor(key, sender) {
     this.key = key;
