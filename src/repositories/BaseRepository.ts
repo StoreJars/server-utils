@@ -7,7 +7,7 @@ import { IRead, IWrite, IMeta } from '../interfaces';
 export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   public readonly collection: Collection;
 
-  constructor(db: Db, collectionName: string) {
+  constructor(db: Db, collectionName = '') {
     this.collection = db.collection(collectionName);
   }
 
@@ -62,7 +62,7 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   public async update(id: ObjectID, data: Record<string, unknown>): Promise<any> {
     const convertedId = objectId(id);
 
-    // if item isnt found, this should throw an error and stop here
+    // if item isn't found, this should throw an error and stop here
     const res = await this.findOneById(convertedId);
 
     // ensure meta and _id are never updated
@@ -71,7 +71,7 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
 
     let query = {};
 
-    // only select items whos values have changed
+    // only select items who's values have changed
     Object.keys(data).forEach((item) => {
       if (data[item] !== res[item]) {
         query = {
@@ -95,7 +95,7 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     );
 
     // find a way to know when the doc was updated
-    // if theres no value, the item wasnt modified so we throw and error to indicate an unsuccessful action
+    // if theres no value, the item wasn't modified so we throw and error to indicate an unsuccessful action
     if (!updateResult.value) {
       throw new NotFoundError('item not found');
     }
