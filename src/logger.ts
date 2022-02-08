@@ -63,7 +63,7 @@ export default function (name: string) {
   }
 
   return {
-    gateway: createLoggerWithLabel(`[${name}:gateway]`),
+    gateway: createLoggerWithLabel(`[${name}:log]`),
     config: createLoggerWithLabel(`[${name}:config]`),
     db: createLoggerWithLabel(`[${name}:db]`),
     admin: createLoggerWithLabel(`[${name}:admin]`),
