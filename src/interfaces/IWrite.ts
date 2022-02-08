@@ -1,6 +1,8 @@
+import { ObjectID } from 'mongodb';
+
 export default interface IWrite<T> {
   create(item: T): Promise<T>;
   createMany(item: T[]): Promise<T>;
-  deactivate(item: object): Promise<object>;
-  update(documentId: object, data: object): Promise<object>;
+  deactivate(item: ObjectID): Promise<unknown>;
+  update(documentId: ObjectID, data: Record<string, unknown>): Promise<unknown>;
 }

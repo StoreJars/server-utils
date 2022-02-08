@@ -5,10 +5,9 @@ import { NotFoundError } from '../errors';
 import { IRead, IWrite, IMeta } from '../interfaces';
 
 export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
-
   public readonly collection: Collection;
 
-  constructor(db: Db, collectionName: string) {
+  constructor(db: Db, collectionName = '') {
     this.collection = db.collection(collectionName);
   }
 
@@ -29,28 +28,24 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   }
 
   public async createMany(items: T[]): Promise<T> {
-
     const result = await this.collection.insertMany(items);
 
     return result.ops[0];
   }
 
-  public async find(query?: object, filter?: object): Promise<T[]> {
-
+  public async find(query?: Record<string, unknown>, filter?: Record<string, unknown>): Promise<T[]> {
     // this should only return things that have been deleted
     return this.collection.find({ ...query, 'meta.active': true }, filter).toArray();
   }
 
-  public async findOne(query?: object, filter?: object): Promise<T> {
-
+  public async findOne(query?: Record<string, unknown>, filter?: Record<string, unknown>): Promise<T> {
     return this.collection.findOne({ ...query, 'meta.active': true }, filter);
   }
 
-  public async findOneById(id: ObjectID, message?: string, filter?: object): Promise<T> {
-
+  public async findOneById(id: ObjectID, message?: string, filter?: Record<string, unknown>): Promise<T> {
     const newId = objectId(id);
 
-    const res = await this.collection.findOne({ '_id': newId, 'meta.active': true }, filter);
+    const res = await this.collection.findOne({ _id: newId, 'meta.active': true }, filter);
 
     if (!res) {
       throw new NotFoundError(message || 'not found');
@@ -64,27 +59,25 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
     return this.collection.aggregate(query).toArray();
   }
 
-  public async update(id: ObjectID, data: object): Promise<any> {
-
+  public async update(id: ObjectID, data: Record<string, unknown>): Promise<any> {
     const convertedId = objectId(id);
 
-    // if item isnt found, this should throw an error and stop here
+    // if item isn't found, this should throw an error and stop here
     const res = await this.findOneById(convertedId);
 
     // ensure meta and _id are never updated
-    // @ts-ignore
     delete data.meta;
-    // @ts-ignore
     delete data._id;
 
     let query = {};
 
-    // only select items whos values have changed
-    Object.keys(data).forEach(item => {
+    // only select items who's values have changed
+    Object.keys(data).forEach((item) => {
       if (data[item] !== res[item]) {
         query = {
-          ...query, ...{ [item]: data[item] }
-        }
+          ...query,
+          ...{ [item]: data[item] },
+        };
       }
     });
 
@@ -94,15 +87,15 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
         $set: {
           ...query,
           'meta.updatedAt': new Date(),
-        }
+        },
       },
       {
         returnOriginal: false,
-      }
+      },
     );
 
     // find a way to know when the doc was updated
-    // if theres no value, the item wasnt modified so we throw and error to indicate an unsuccessful action
+    // if theres no value, the item wasn't modified so we throw and error to indicate an unsuccessful action
     if (!updateResult.value) {
       throw new NotFoundError('item not found');
     }
@@ -111,7 +104,6 @@ export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   }
 
   public async deactivate(id: ObjectID): Promise<any> {
-
     const convertedId = objectId(id);
 
     const updateResult = await this.collection.findOneAndUpdate(

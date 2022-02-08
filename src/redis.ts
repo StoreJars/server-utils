@@ -6,8 +6,8 @@ export function redisConnect(url: string) {
 }
 
 /**
- * This class aims to retun data from one of two sources, 
- * Redis cache or fresh data from server then cache that datat
+ * This class aims to return data from one of two sources,
+ * Redis cache or fresh data from server then cache that data
  */
 
 export class Query {
@@ -18,7 +18,7 @@ export class Query {
   constructor(redisClient, key, url) {
     this.url = url;
     this.key = key;
-    this.redisClient = redisClient
+    this.redisClient = redisClient;
   }
 
   public flush() {
@@ -32,7 +32,6 @@ export class Query {
   private async getLocal() {
     return new Promise((resolve, reject) => {
       if (this.redisClient.connected) {
-
         this.redisClient.get(this.key, (error, result) => {
           if (error) {
             reject(error);
@@ -44,21 +43,20 @@ export class Query {
             resolve('');
           }
         });
-
       } else {
         resolve('');
       }
-    })
+    });
   }
 
   private getLive(query, variables): Promise<{}> {
-    const client = new GraphQLClient(this.url)
+    const client = new GraphQLClient(this.url);
 
-    return client.request(query, variables)
+    return client.request(query, variables);
   }
 
-  public async  get(query, variables) {
-    // TDODO fix issue where redis is returning earler an undefuned therby crashing the app
+  public async get(query, variables) {
+    // TODO fix issue where redis is returning earlier an undefined thereby crashing the app
     this.flush();
 
     const res = await this.getLocal();
@@ -70,4 +68,3 @@ export class Query {
     }
   }
 }
-
