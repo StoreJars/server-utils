@@ -36,6 +36,6 @@ export function objectId(id: any) {
 }
 
 export function generateId() {
-  shortId.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&$');
+  shortId.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
   return shortId.generate();
 }
