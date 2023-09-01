@@ -46,20 +46,6 @@ export default function (name: string) {
         format: combine(colorize(), label({ label: name }), timestamp({ format: 'YYYY-MM-DD HH:mm:ss' })),
       }),
     );
-
-    createLoggerWithLabel(name).add(
-      new transports.File({
-        filename: path.join(LOGS_DIR, 'debug.log'),
-        level: 'info',
-      }),
-    );
-
-    createLoggerWithLabel(name).add(
-      new transports.File({
-        filename: path.join(LOGS_DIR, 'error.log'),
-        level: 'error',
-      }),
-    );
   }
 
   return {
